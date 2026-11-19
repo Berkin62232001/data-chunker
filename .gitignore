@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+backend/.venv/
+backend/.pytest_cache/
+
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Storage artifacts (generated at runtime — never commit)
+backend/storage/raw/
+backend/storage/converted/
+backend/storage/chunks/
+backend/storage/llm_payloads/
+backend/storage/payloads/
+backend/storage/audit/
+backend/storage/projects/
+backend/storage/app.db
+backend/storage/app.db-shm
+backend/storage/app.db-wal
+
+# Environment files
+.env
+.env.local
+backend/.env
+frontend/.env.local
+
+# OS
+.DS_Store
+
+# Claude Code local tooling (permissions, preview launch config)
+.claude/
+
+# Local environments, credentials and agent configuration (all directory levels)
+.venv*/
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+.aws/
+.ssh/
+.codex/
+.claude.*/
+[Cc][Ll][Aa][Uu][Dd][Ee].[Mm][Dd]
+AGENTS.md
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.log
+
+# Private PDF questions and benchmark exports can contain document text
+backend/benchmarks/pdf_questions.json
+chunker-comparison*.json
+.publication/

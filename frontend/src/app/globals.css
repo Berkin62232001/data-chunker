@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+/* ── Design tokens ─────────────────────────────────────────────────────────── */
+:root {
+  /* Accent — indigo/violet */
+  --a-500: #5b50f0;
+  --a-600: #4a3fe0;
+  --a-700: #3d33c2;
+  --a-soft: #efedfe;
+  --a-soft-fg: #4a3fe0;
+  --grad-from: #7a4ff7;
+  --grad-to: #3f6bf6;
+
+  /* Surfaces */
+  --bg: #f7f7fa;
+  --surface: #ffffff;
+  --surface-2: #f6f6fa;
+  --surface-3: #f0f0f6;
+  --inset: #f5f5f9;
+  --border: #ececf2;
+  --border-2: #e2e2ec;
+
+  /* Text */
+  --text: #14141c;
+  --text-2: #56566a;
+  --text-3: #8a8a9c;
+
+  /* Radii */
+  --radius: 16px;
+  --radius-sm: 11px;
+  --radius-xs: 8px;
+
+  /* Shadows */
+  --card-shadow: 0 1px 2px rgba(20, 20, 40, 0.04);
+  --card-shadow-hover: 0 8px 24px -12px rgba(20, 20, 50, 0.18), 0 1px 2px rgba(20, 20, 40, 0.05);
+  --ring: rgba(91, 80, 240, 0.35);
+
+  /* Sidebar */
+  --side-text: #b9b6cc;
+  --side-text-dim: #74718c;
+  --side-border: rgba(255, 255, 255, 0.08);
+  --side-hover: rgba(255, 255, 255, 0.06);
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Sidebar gradient + glow ─────────────────────────────────────────────── */
+.side {
+  background: linear-gradient(180deg, #211b3b 0%, #16122a 42%, #0c0a18 100%);
+  position: relative;
+  overflow: hidden;
+}
+.side::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(420px 220px at 24% 4%, rgba(91, 80, 240, 0.5), transparent 70%);
+  pointer-events: none;
+}
+.side > * { position: relative; z-index: 1; }
+
+/* ── Nav active — gradient pill ──────────────────────────────────────────── */
+.nav-active {
+  background: linear-gradient(135deg, #7a4ff7, #3f6bf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px -8px rgba(91, 80, 240, 0.75);
+}
+
+/* ── Gradient primary button ─────────────────────────────────────────────── */
+.btn-grad {
+  background: linear-gradient(135deg, var(--grad-from), var(--grad-to));
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(91, 80, 240, 0.6);
+}
+.btn-grad:hover { filter: brightness(1.06); }
+.btn-grad:active { transform: translateY(0.5px); }
+.btn-grad:disabled {
+  background: var(--surface-3);
+  color: var(--text-3);
+  box-shadow: none;
+  filter: none;
+}
+
+/* ── CTA banner ──────────────────────────────────────────────────────────── */
+.cta-banner {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #7a4ff7, #3f6bf6);
+  border-radius: var(--radius);
+  box-shadow: 0 16px 40px -20px rgba(91, 80, 240, 0.7);
+}
+.cta-banner::before {
+  content: "";
+  position: absolute;
+  left: -60px;
+  bottom: -90px;
+  width: 240px;
+  height: 240px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.10), transparent 65%);
+}
+.cta-banner::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -60px;
+  width: 280px;
+  height: 280px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 65%);
+}
+
+/* ── Dropzone gradient icon ──────────────────────────────────────────────── */
+.dz-icon {
+  background: linear-gradient(135deg, #7a4ff7, #3f6bf6);
+  box-shadow: 0 12px 28px -10px rgba(91, 80, 240, 0.7);
+}
+
+/* ── Progress bar gradient ───────────────────────────────────────────────── */
+.progress-grad {
+  background: linear-gradient(90deg, #7a4ff7, #3f6bf6);
+}
+
+/* ── Pipeline tracker nodes ──────────────────────────────────────────────── */
+.pt-node {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: var(--surface-3);
+  color: var(--text-3);
+  border: 1px solid var(--border-2);
+  transition: all 0.2s;
+}
+.pt-node.done {
+  background: #e4f7ec;
+  color: #137a45;
+  border-color: #c5edd4;
+}
+.pt-node.current {
+  background: linear-gradient(135deg, #7a4ff7, #3f6bf6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 16px -6px rgba(91, 80, 240, 0.6);
+}
+.pt-node.running {
+  background: linear-gradient(135deg, #7a4ff7, #3f6bf6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+/* ── Hover rows ──────────────────────────────────────────────────────────── */
+.hoverrow { transition: background 0.14s; }
+.hoverrow:hover { background: var(--surface-2); }
+
+/* ── Fade-up entrance ────────────────────────────────────────────────────── */
+.fade-in {
+  animation: fadeUp 0.35s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes fadeUp {
+  from { transform: translateY(6px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .fade-in { animation: none; } }

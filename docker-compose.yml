@@ -1,0 +1,67 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./backend/storage:/app/storage
+    environment:
+      - LOCAL_ONLY_MODE=true
+      - API_ACCESS_KEY=${API_ACCESS_KEY:?Set API_ACCESS_KEY in your shell or root .env}
+      - DATABASE_URL=sqlite:///storage/app.db
+      - QDRANT_URL=http://qdrant:6333
+      - QDRANT_COLLECTION_NAME=${QDRANT_COLLECTION_NAME:-llm_file_chunks}
+      - EMBEDDING_PROVIDER=${EMBEDDING_PROVIDER:-deterministic_demo}
+      - LM_STUDIO_BASE_URL=${LM_STUDIO_BASE_URL:-http://host.docker.internal:1234/v1}
+      - LM_STUDIO_EMBEDDING_MODEL=${LM_STUDIO_EMBEDDING_MODEL:-nomic-embed-text}
+      - LM_STUDIO_API_KEY=${LM_STUDIO_API_KEY:-lm-studio}
+      - LM_STUDIO_TIMEOUT_SECONDS=${LM_STUDIO_TIMEOUT_SECONDS:-30}
+      - LM_STUDIO_BATCH_SIZE=${LM_STUDIO_BATCH_SIZE:-16}
+      - OCR_ENABLED=${OCR_ENABLED:-false}
+      - OCR_PROVIDER=${OCR_PROVIDER:-ocrmypdf}
+      - OCR_LANGUAGE=${OCR_LANGUAGE:-eng}
+      - OCR_TIMEOUT_SECONDS=${OCR_TIMEOUT_SECONDS:-120}
+      - OCR_MAX_PAGES=${OCR_MAX_PAGES:-50}
+      - OCR_DPI=${OCR_DPI:-300}
+      - OCR_OUTPUT_MODE=${OCR_OUTPUT_MODE:-text}
+      - OCR_FAIL_OPEN=${OCR_FAIL_OPEN:-true}
+    depends_on:
+      qdrant:
+        condition: service_started
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  qdrant:
+    image: qdrant/qdrant
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:6333/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+
+volumes:
+  qdrant_storage:
